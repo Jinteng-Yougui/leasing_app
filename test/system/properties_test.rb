@@ -34,7 +34,7 @@ class PropertiesTest < ApplicationSystemTestCase
     fill_in "Property", with: @property.property
     fill_in "Remarks", with: @property.remarks
     fill_in "Rent", with: @property.rent
-    click_on "Update Property"
+    click_on "更新する"
 
     assert_text "Property was successfully updated"
     click_on "Back"
