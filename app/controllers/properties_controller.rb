@@ -7,40 +7,46 @@ class PropertiesController < ApplicationController
   end
 
   # GET /properties/1 or /properties/1.json
-  def show
-    @property = Property.find(params[:id])
+  def show;
   end
 
   # GET /properties/new
   def new
     @property = Property.new
+    @property.nearest_stations.build
   end
 
   # GET /properties/1/edit
-  def edit
-    @property = Property.find(params[:id])
+  def edit;
   end
 
   # POST /properties or /properties.json
   def create
     @property = Property.new(property_params)
-
-    respond_to do |format|
-      if @property.save
-        format.html { redirect_to @property, notice: "物件が作成されました" }
-        format.json { render :show, status: :created, location: @property }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @property.errors, status: :unprocessable_entity }
+    if params[:back]
+      render :new
+    else
+      respond_to do |format|
+        if @property.save
+          format.html { redirect_to @property, notice: "物件情報が作成されました" }
+          format.json { render :show, status: :created, location: @property }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @property.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
 
+  def confirm
+    @property = Property.new(property_params)
+    render :new if @property.invalid?
+  end
   # PATCH/PUT /properties/1 or /properties/1.json
   def update
     respond_to do |format|
       if @property.update(property_params)
-        format.html { redirect_to @property, notice: "物件の編集が完了しました" }
+        format.html { redirect_to @property, notice: "物件情報の編集が完了しました" }
         format.json { render :show, status: :ok, location: @property }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -53,19 +59,20 @@ class PropertiesController < ApplicationController
   def destroy
     @property.destroy
     respond_to do |format|
-      format.html { redirect_to properties_url, notice: "物件が削除されました" }
+      format.html { redirect_to properties_url, notice: "物件情報が削除されました" }
       format.json { head :no_content }
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_property
+  def set_property
       @property = Property.find(params[:id])
-    end
+  end
 
     # Only allow a list of trusted parameters through.
-    def property_params
-      params.require(:property).permit(:property, :rent, :address, :building_age, :remarks)
-    end
+  def property_params
+    params.require(:property).permit(:property, :rent, :address, :building_age, :remarks,
+                                    nearest_stations_attributes:[:id, :title, :name_of_railway, :station_name, :how_many_minuites_walk])
+  end
 end
