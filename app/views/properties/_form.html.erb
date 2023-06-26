@@ -39,4 +39,20 @@
   <div class="actions">
     <%= form.submit %>
   </div>
+
+  <hr>
+  <% number =0 %>
+  <%= form.fields_for :nearest_stations do |g| %>
+    <h3><label for="title">最寄り駅<% number +=1 %></label></h3>
+    <p><%= g.label :路線名 %></p>
+    <p><%= g.text_field :name_of_railway %></p>
+    <p><%= g.label :駅名 %></p>
+    <p><%= g.text_field :station_name %></p>
+    <p><%= g.label :徒歩分数 %></p>
+    <p><%= g.number_field :how_many_minuites_walk %>分</p>
+  <% end %>
+  
+  <div class="actions">
+    <%= form.submit :登録する %>
+  </div>
 <% end %>
