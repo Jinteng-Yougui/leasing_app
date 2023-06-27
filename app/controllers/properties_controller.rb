@@ -1,5 +1,6 @@
 class PropertiesController < ApplicationController
   before_action :set_property, only: %i[ show edit update destroy ]
+  before_action :set_nearest_stations, only: %i[ show edit update ]
 
   # GET /properties or /properties.json
   def index
@@ -8,16 +9,18 @@ class PropertiesController < ApplicationController
 
   # GET /properties/1 or /properties/1.json
   def show;
+    @neares_stations = @property.nearest_stations
   end
 
   # GET /properties/new
   def new
     @property = Property.new
-    @property.nearest_stations.build
+    2. times { @property.nearest_stations.build }
   end
 
   # GET /properties/1/edit
   def edit;
+    @property.nearest_stations.build
   end
 
   # POST /properties or /properties.json
@@ -70,6 +73,9 @@ class PropertiesController < ApplicationController
       @property = Property.find(params[:id])
   end
 
+  def set_nearest_stations
+    @neares_stations = @property.nearest_stations
+  end
     # Only allow a list of trusted parameters through.
   def property_params
     params.require(:property).permit(:property, :rent, :address, :building_age, :remarks,
